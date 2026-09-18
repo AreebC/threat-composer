@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Projects · Cloud Threat Composer{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">SECURITY WORKSPACE</p><h1>Model cloud threats.<br><span>Prioritise what matters.</span></h1>
+  <p>Create lightweight STRIDE threat models, score risk, and track mitigations.</p></div>
+  <button class="button primary" data-open="project-dialog">+ New project</button>
+</section>
+
+<section class="section-heading"><div><h2>Your projects</h2><p>{{ projects|length }} threat model{% if projects|length != 1 %}s{% endif %}</p></div></section>
+<div class="project-grid">
+  {% for project in projects %}
+  <a class="project-card" href="/projects/{{ project.id }}">
+    <div class="card-icon">{{ project.name[0]|upper }}</div>
+    <div><h3>{{ project.name }}</h3><p>{{ project.description or "No description added." }}</p></div>
+    <div class="card-footer"><span>{{ project.threats|length }} threats</span><span>Open model →</span></div>
+  </a>
+  {% else %}
+  <div class="empty"><div class="empty-icon">◇</div><h3>No projects yet</h3><p>Create your first threat model to begin.</p><button class="button primary" data-open="project-dialog">Create project</button></div>
+  {% endfor %}
+</div>
+
+<dialog id="project-dialog"><form method="post" action="/projects">
+  <div class="dialog-head"><div><p class="eyebrow">NEW MODEL</p><h2>Create a project</h2></div><button type="button" class="icon-button" data-close>×</button></div>
+  <label>Project name<input name="name" maxlength="120" required placeholder="e.g. Payment API"></label>
+  <label>Description<textarea name="description" rows="4" maxlength="2000" placeholder="Describe the architecture and its purpose"></textarea></label>
+  <div class="dialog-actions"><button type="button" class="button ghost" data-close>Cancel</button><button class="button primary">Create project</button></div>
+</form></dialog>
+{% endblock %}

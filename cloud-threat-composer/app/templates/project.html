@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} · Cloud Threat Composer{% endblock %}
+{% block content %}
+<nav class="breadcrumb"><a href="/">Projects</a><span>/</span><span>{{ project.name }}</span></nav>
+<section class="project-header"><div><p class="eyebrow">THREAT MODEL</p><h1>{{ project.name }}</h1><p>{{ project.description or "No project description." }}</p></div><div class="header-actions"><button class="button primary" data-open="threat-dialog">+ Add threat</button><form method="post" action="/projects/{{ project.id }}/delete" data-confirm="Delete this project and all its threats?"><button class="button danger">Delete project</button></form></div></section>
+
+<div class="stats">
+  {% for level in ["Critical", "High", "Medium", "Low"] %}<div class="stat"><span class="dot {{ level|lower }}"></span><div><strong>{{ summary[level] }}</strong><small>{{ level }}</small></div></div>{% endfor %}
+</div>
+
+<section class="section-heading"><div><h2>Threat register</h2><p>{{ project.threats|length }} identified threat{% if project.threats|length != 1 %}s{% endif %}</p></div><select id="severity-filter" aria-label="Filter by severity"><option value="all">All severities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></section>
+<div class="table-wrap"><table><thead><tr><th>Threat</th><th>Component</th><th>STRIDE</th><th>Risk</th><th>Status</th><th></th></tr></thead><tbody>
+{% for threat in project.threats|sort(attribute="risk_score", reverse=true) %}
+<tr data-severity="{{ threat.severity }}"><td><strong>{{ threat.name }}</strong><small>{{ threat.description }}</small>{% if threat.mitigation %}<details><summary>Mitigation</summary><p>{{ threat.mitigation }}</p></details>{% endif %}</td><td><span class="component">{{ threat.component }}</span></td><td>{{ threat.stride_category }}</td><td><span class="badge {{ threat.severity|lower }}">{{ threat.severity }}</span><small>{{ threat.risk_score }}/25</small></td><td><form method="post" action="/projects/{{ project.id }}/threats/{{ threat.id }}/status"><select name="status" onchange="this.form.submit()">{% for option in statuses %}<option {% if option == threat.status %}selected{% endif %}>{{ option }}</option>{% endfor %}</select></form></td><td><form method="post" action="/projects/{{ project.id }}/threats/{{ threat.id }}/delete" data-confirm="Delete this threat?"><button class="icon-button" title="Delete">×</button></form></td></tr>
+{% else %}<tr><td colspan="6" class="empty-row">No threats yet. Add one manually or use a cloud suggestion.</td></tr>{% endfor %}
+</tbody></table></div>
+
+<dialog id="threat-dialog"><form method="post" action="/projects/{{ project.id }}/threats">
+  <div class="dialog-head"><div><p class="eyebrow">RISK ENTRY</p><h2>Add a threat</h2></div><button type="button" class="icon-button" data-close>×</button></div>
+  <label>Cloud component<select name="component" id="component">{% for item in components %}<option>{{ item }}</option>{% endfor %}</select></label>
+  <label>Suggested threat<select id="suggestion"><option value="">Choose a suggestion (optional)</option></select></label>
+  <label>Threat name<input name="name" id="threat-name" maxlength="160" required placeholder="e.g. Authentication bypass"></label>
+  <label>Description<textarea name="description" id="threat-description" rows="3" maxlength="3000"></textarea></label>
+  <div class="form-grid"><label>STRIDE category<select name="stride_category" id="stride-category">{% for category in stride_categories %}<option>{{ category }}</option>{% endfor %}</select></label><label>Status<select name="status">{% for status in statuses %}<option>{{ status }}</option>{% endfor %}</select></label></div>
+  <div class="form-grid"><label>Likelihood <span id="likelihood-value">3</span>/5<input type="range" name="likelihood" id="likelihood" min="1" max="5" value="3"></label><label>Impact <span id="impact-value">3</span>/5<input type="range" name="impact" id="impact" min="1" max="5" value="3"></label></div>
+  <div class="risk-preview">Calculated risk: <strong id="risk-preview">9 / 25 — Medium</strong></div>
+  <label>Mitigation<textarea name="mitigation" rows="3" maxlength="3000" placeholder="Controls that reduce or accept this risk"></textarea></label>
+  <div class="dialog-actions"><button type="button" class="button ghost" data-close>Cancel</button><button class="button primary">Add threat</button></div>
+</form></dialog>
+<script id="threat-library" type="application/json">{{ threat_library|tojson }}</script>
+{% endblock %}

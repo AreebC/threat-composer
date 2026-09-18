@@ -1,0 +1,31 @@
+{
+  "API": [
+    {"name": "Authentication bypass", "stride": "Spoofing", "description": "An attacker bypasses authentication and impersonates a legitimate user."},
+    {"name": "Injection attack", "stride": "Tampering", "description": "Untrusted input changes a command or database query."},
+    {"name": "API flooding", "stride": "Denial of Service", "description": "Excessive requests exhaust application capacity."},
+    {"name": "Broken authorization", "stride": "Elevation of Privilege", "description": "A user accesses operations or records outside their permissions."}
+  ],
+  "S3": [
+    {"name": "Public bucket exposure", "stride": "Information Disclosure", "description": "Sensitive objects are publicly readable due to a policy or ACL."},
+    {"name": "Unauthorized object modification", "stride": "Tampering", "description": "An attacker modifies or replaces stored objects."},
+    {"name": "Missing access logging", "stride": "Repudiation", "description": "Object access cannot be reliably traced during an investigation."},
+    {"name": "Over-permissive bucket access", "stride": "Elevation of Privilege", "description": "A principal has broader object permissions than required."}
+  ],
+  "EC2": [
+    {"name": "Public SSH exposure", "stride": "Spoofing", "description": "An internet-accessible SSH service is targeted with stolen credentials."},
+    {"name": "Unpatched operating system", "stride": "Elevation of Privilege", "description": "Known vulnerabilities allow an attacker to gain elevated access."},
+    {"name": "Instance metadata credential theft", "stride": "Information Disclosure", "description": "An attacker obtains temporary IAM credentials from instance metadata."},
+    {"name": "Resource exhaustion", "stride": "Denial of Service", "description": "Workload or attacker activity exhausts CPU, memory, or disk."}
+  ],
+  "RDS": [
+    {"name": "Public database exposure", "stride": "Information Disclosure", "description": "The database is reachable from untrusted networks."},
+    {"name": "Weak database credentials", "stride": "Spoofing", "description": "Weak or reused credentials allow unauthorized access."},
+    {"name": "Unencrypted data", "stride": "Information Disclosure", "description": "Sensitive database data is exposed at rest or in transit."},
+    {"name": "Excessive database privileges", "stride": "Elevation of Privilege", "description": "Application users have more database access than required."}
+  ],
+  "ECS": [
+    {"name": "Vulnerable container image", "stride": "Elevation of Privilege", "description": "A known image vulnerability is exploited inside the workload."},
+    {"name": "Over-permissive task role", "stride": "Elevation of Privilege", "description": "A compromised task can call unnecessary AWS APIs."},
+    {"name": "Exposed container port", "stride": "Information Disclosure", "description": "A task is reachable directly instead of only through an approved entry point."}
+  ]
+}
