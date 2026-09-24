@@ -23,3 +23,8 @@ variable "public_subnet_ids" {
   description = "A list of public subnet IDs where the ALB will be deployed."
   type        = list(string)
 }
+
+variable "certificate_arn" {
+  description = "ARN of the ACM certificate used by the HTTPS listener"
+  type        = string
+}

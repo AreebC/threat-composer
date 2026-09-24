@@ -45,3 +45,14 @@ variable "image_tag" {
   type        = string
   default     = "bootstrap"
 }
+
+variable "domain_name" {
+  description = "Root domain used for the application"
+  type        = string
+}
+
+variable "app_subdomain" {
+  description = "Subdomain used for the Threat Composer application"
+  type        = string
+  default     = "threat-composer"
+}
